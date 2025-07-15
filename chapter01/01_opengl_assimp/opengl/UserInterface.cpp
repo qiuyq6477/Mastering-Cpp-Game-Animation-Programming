@@ -24,7 +24,7 @@ void UserInterface::init(OGLRenderData &renderData) {
 
   ImGui_ImplGlfw_InitForOpenGL(renderData.rdWindow, true);
 
-  const char *glslVersion = "#version 460 core";
+  const char *glslVersion = "#version 410 core";
   ImGui_ImplOpenGL3_Init(glslVersion);
 
   ImGui::StyleColorsDark();

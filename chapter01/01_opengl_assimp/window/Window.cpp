@@ -9,7 +9,7 @@ bool Window::init(unsigned int width, unsigned int height, std::string title) {
 
   /* set a "hint" for the NEXT window created */
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   mWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -55,7 +55,7 @@ bool Window::init(unsigned int width, unsigned int height, std::string title) {
     return false;
   }
 
-  Logger::log(1, "%s: Window with OpenGL 4.6 successfully initialized\n", __FUNCTION__);
+  Logger::log(1, "%s: Window with OpenGL 4.1 successfully initialized\n", __FUNCTION__);
   return true;
 }
 

@@ -30,10 +30,10 @@ bool OGLRenderer::init(unsigned int width, unsigned int height) {
     return false;
   }
 
-  if (!GLAD_GL_VERSION_4_6) {
-    Logger::log(1, "%s error: failed to get at least OpenGL 4.6\n", __FUNCTION__);
-    return false;
-  }
+  // if (!GLAD_GL_VERSION_4_6) {
+  //   Logger::log(1, "%s error: failed to get at least OpenGL 4.6\n", __FUNCTION__);
+  //   return false;
+  // }
 
   GLint majorVersion, minorVersion;
   glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
@@ -75,10 +75,10 @@ bool OGLRenderer::init(unsigned int width, unsigned int height) {
   glLineWidth(3.0);
   Logger::log(1, "%s: rendering defaults set\n", __FUNCTION__);
 
-  /* SSBO init */
-  mShaderBoneMatrixBuffer.init(256);
-  mWorldPosBuffer.init(256);
-  Logger::log(1, "%s: SSBOs initialized\n", __FUNCTION__);
+  /* UBO init */
+  mShaderBoneMatrixBuffer.init(256 * sizeof(glm::mat4));
+  mWorldPosBuffer.init(128 * sizeof(glm::mat4));
+  Logger::log(1, "%s: UBOs initialized\n", __FUNCTION__);
 
   /* register callbacks */
   mModelInstData.miModelCheckCallbackFunction = [this](std::string fileName) { return hasModel(fileName); };
@@ -422,7 +422,7 @@ bool OGLRenderer::draw(float deltaTime) {
         mAssimpSkinningShader.use();
         mUploadToUBOTimer.start();
         mAssimpSkinningShader.setUniformValue(numberOfBones);
-        mShaderBoneMatrixBuffer.uploadSsboData(mModelBoneMatrices, 1);
+        mShaderBoneMatrixBuffer.uploadUboData(mModelBoneMatrices, 1);
         mRenderData.rdUploadToUBOTime += mUploadToUBOTimer.stop();
       } else {
         /* non-animated models */
@@ -437,7 +437,7 @@ bool OGLRenderer::draw(float deltaTime) {
 
         mAssimpShader.use();
         mUploadToUBOTimer.start();
-        mWorldPosBuffer.uploadSsboData(mWorldPosMatrices, 1);
+        mWorldPosBuffer.uploadUboData(mWorldPosMatrices, 1);
         mRenderData.rdUploadToUBOTime += mUploadToUBOTimer.stop();
       }
 

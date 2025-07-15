@@ -93,6 +93,10 @@ bool Shader::createShaderProgram(std::string vertexShaderFileName, std::string f
   /* bind UBO in shader */
   GLint uboIndex = glGetUniformBlockIndex(mShaderProgram, "Matrices");
   glUniformBlockBinding(mShaderProgram, uboIndex, 0);
+  uboIndex = glGetUniformBlockIndex(mShaderProgram, "WorldPosMatrices");
+  if (uboIndex != -1) glUniformBlockBinding(mShaderProgram, uboIndex, 1);
+  uboIndex = glGetUniformBlockIndex(mShaderProgram, "BoneMatrices");
+  if (uboIndex != -1) glUniformBlockBinding(mShaderProgram, uboIndex, 1);
 
   /* it is safe to delete the original shaders here */
   glDeleteShader(vertexShader);

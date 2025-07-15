@@ -1,4 +1,4 @@
-#version 460 core
+#version 410 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec4 aColor;
 layout (location = 2) in vec3 aNormal;
@@ -10,13 +10,13 @@ layout (location = 0) out vec4 color;
 layout (location = 1) out vec3 normal;
 layout (location = 2) out vec2 texCoord;
 
-layout (std140, binding = 0) uniform Matrices {
+layout (std140) uniform Matrices {
   mat4 view;
   mat4 projection;
 };
 
-layout (std430, binding = 1) readonly restrict buffer BoneMatrices {
-  mat4 boneMat[];
+layout (std140) uniform BoneMatrices {
+  mat4 boneMat[256];
 };
 
 uniform int aModelStride;

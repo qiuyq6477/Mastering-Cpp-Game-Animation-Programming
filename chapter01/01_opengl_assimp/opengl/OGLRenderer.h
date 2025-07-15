@@ -1,4 +1,4 @@
-/* simple OpenGL 4.6 renderer */
+/* simple OpenGL 4.1 renderer */
 #pragma once
 
 #include <vector>
@@ -19,7 +19,6 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "UniformBuffer.h"
-#include "ShaderStorageBuffer.h"
 #include "UserInterface.h"
 #include "Camera.h"
 #include "AssimpModel.h"
@@ -71,11 +70,11 @@ class OGLRenderer {
 
     /* for non-animated models */
     std::vector<glm::mat4> mWorldPosMatrices{};
-    ShaderStorageBuffer mWorldPosBuffer{};
+    UniformBuffer mWorldPosBuffer{};
 
     /* for animated models */
     std::vector<glm::mat4> mModelBoneMatrices{};
-    ShaderStorageBuffer mShaderBoneMatrixBuffer{};
+    UniformBuffer mShaderBoneMatrixBuffer{};
 
     bool mMouseLock = false;
     int mMouseXPos = 0;
