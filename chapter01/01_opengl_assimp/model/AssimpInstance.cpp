@@ -50,6 +50,7 @@ void AssimpInstance::updateAnimation(float deltaTime) {
   std::vector<std::shared_ptr<AssimpAnimChannel>> animChannels = mAssimpModel->getAnimClips().at(mInstanceSettings.isAnimClipNr)->getChannels();
 
   /* animate clip via channels */
+  // 动画系统会根据当前时间，插值出每个节点的动画变换（平移、旋转、缩放），并更新节点的本地变换矩阵
   for (const auto& channel : animChannels) {
     std::string nodeNameToAnimate = channel->getTargetNodeName();
     std::shared_ptr<AssimpNode> node = mAssimpModel->getNodeMap().at(nodeNameToAnimate);
@@ -63,6 +64,7 @@ void AssimpInstance::updateAnimation(float deltaTime) {
   mAssimpModel->getRootNode()->setRootTransformMatrix(mLocalTransformMatrix * mAssimpModel->getRootTranformationMatrix());
 
   /* flat node map contains nodes in parent->child order, starting with root node, update matrices down the skeleton tree */
+  // 从父节点开始更新变换矩阵， getTRSMatrix返回的是世界坐标系下的变换
   mBoneMatrices.clear();
   for (auto& node : mAssimpModel->getNodeList()) {
     std::string nodeName = node->getNodeName();

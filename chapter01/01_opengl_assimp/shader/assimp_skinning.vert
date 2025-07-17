@@ -3,8 +3,8 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec4 aColor;
 layout (location = 2) in vec3 aNormal;
 layout (location = 3) in vec2 aTexCoord;
-layout (location = 4) in uvec4 aBoneNum;
-layout (location = 5) in vec4 aBoneWeight;
+layout (location = 4) in uvec4 aBoneNum; // 骨骼编号
+layout (location = 5) in vec4 aBoneWeight; // 骨骼权重
 
 layout (location = 0) out vec4 color;
 layout (location = 1) out vec3 normal;
@@ -23,6 +23,7 @@ uniform int aModelStride;
 
 void main() {
 
+  // 蒙皮，将骨骼的变换应用到网格上的顶点
   mat4 skinMat =
     aBoneWeight.x * boneMat[aBoneNum.x + gl_InstanceID * aModelStride] +
     aBoneWeight.y * boneMat[aBoneNum.y + gl_InstanceID * aModelStride] +

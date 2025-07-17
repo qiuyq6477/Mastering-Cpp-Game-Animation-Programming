@@ -12,7 +12,8 @@ void AssimpAnimChannel::loadChannelData(aiNodeAnim* nodeAnim) {
 
   Logger::log(1, "%s: - loading animation channel for node '%s', with %i translation keys, %i rotation keys, %i scaling keys (preState %i, postState %i)\n",
               __FUNCTION__, mNodeName.c_str(), numTranslations, numRotations, numScalings, preState, postState);
-
+  
+  // 是相对于该节点（骨骼）父节点的坐标系。
   for (unsigned int i = 0; i < numTranslations; ++i) {
     mTranslationTiminngs.emplace_back(static_cast<float>(nodeAnim->mPositionKeys[i].mTime));
     mTranslations.emplace_back(glm::vec3(nodeAnim->mPositionKeys[i].mValue.x, nodeAnim->mPositionKeys[i].mValue.y, nodeAnim->mPositionKeys[i].mValue.z));
@@ -29,6 +30,11 @@ void AssimpAnimChannel::loadChannelData(aiNodeAnim* nodeAnim) {
   }
 
   /* precalcuate the inverse offset to avoid divisions when scaling the section */
+  // 分别对应平移（Translation）、旋转（Rotation）、缩放（Scale）关键帧的时间间隔的倒数。
+  // 在动画播放时，常常需要在两个关键帧之间做线性插值（Lerp）或球面插值（Slerp）
+  // 设第i帧时间为t0，第i+1帧时间为t1，当前时间为t，则插值因子为： factor = (t - t0) / (t1 - t0)
+  // 如果每次都要做除法(t1 - t0)，效率较低。预先把每个时间间隔的倒数算好，插值时只需乘法：
+  // 可以加速动画插值的计算，尤其在大量骨骼动画时提升性能。
   for (unsigned int i = 0; i < mTranslationTiminngs.size() - 1; ++i) {
     mInverseTranslationTimeDiffs.emplace_back(1.0f / (mTranslationTiminngs.at(i + 1) - mTranslationTiminngs.at(i)));
   }

@@ -149,6 +149,7 @@ void AssimpModel::processNode(std::shared_ptr<AssimpNode> node, aiNode* aNode, c
   std::string nodeName = aNode->mName.C_Str();
   Logger::log(1, "%s: node name: '%s'\n", __FUNCTION__, nodeName.c_str());
 
+  // 读取mesh
   unsigned int numMeshes = aNode->mNumMeshes;
   if (numMeshes > 0) {
     Logger::log(1, "%s: - node has %i meshes\n", __FUNCTION__, numMeshes);

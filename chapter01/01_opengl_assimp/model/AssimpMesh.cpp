@@ -121,9 +121,17 @@ bool AssimpMesh::processMesh(aiMesh* mesh, const aiScene* scene, std::string ass
       unsigned int numWeights = mesh->mBones[boneId]->mNumWeights;
       Logger::log(1, "%s: --- bone nr. %i has name %s, contains %i weights\n", __FUNCTION__, boneId, boneName.c_str(), numWeights);
 
+      // 绑定姿态逆矩阵（Inverse Bind Pose Matrix）。
+      // 在骨骼动画中，顶点的初始位置是“模型空间”下的。
+      // 但骨骼动画的变换是“骨骼空间”下的。
+      // Offset Matrix的作用就是：把顶点从模型空间（model space）变换到骨骼的本地空间（bind pose 下的骨骼空间）。这样骨骼变换时，顶点才能正确跟随骨骼运动。
+      // 在动画时，顶点需要先从模型空间变换到骨骼的本地空间（用 offset matrix），再用当前骨骼的世界变换（TRS）变换回世界空间。
       std::shared_ptr<AssimpBone> newBone = std::make_shared<AssimpBone>(boneId, boneName, Tools::convertAiToGLM(mesh->mBones[boneId]->mOffsetMatrix));
       mBoneList.push_back(newBone);
 
+      // mWeights记录了这个骨骼影响了哪些顶点，以及每个顶点的权重
+      // 将这个权重和骨骼反向存储在顶点中，最多存储四个，即这个顶点最多受四个骨骼影响，每个骨骼有不同的权重，加起来等于1
+      // 在蒙皮（skinning）时，顶点的新位置 = 各骨骼变换 * 权重 的加权和
       for (unsigned int weight = 0; weight < numWeights; ++weight) {
         unsigned int vertexId = mesh->mBones[boneId]->mWeights[weight].mVertexId;
         float vertexWeight = mesh->mBones[boneId]->mWeights[weight].mWeight;

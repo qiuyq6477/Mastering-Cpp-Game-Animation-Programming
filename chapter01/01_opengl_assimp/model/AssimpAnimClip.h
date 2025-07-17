@@ -8,6 +8,8 @@
 
 #include "AssimpAnimChannel.h"
 
+// 描述一个完整的动画动作，比如“走路”、“跳跃”、“攻击”。包含了所有骨骼在该动作下的动画数据
+// 可以同时播放多个AnimClip，对同一骨骼的AnimChannel做加权混合，实现平滑过渡。
 class AssimpAnimClip {
   public:
     void addChannels(aiAnimation* animation);

@@ -21,6 +21,7 @@ class AssimpNode : public std::enable_shared_from_this<AssimpNode>  {
 
     void setRootTransformMatrix(glm::mat4 matrix);
 
+    // 反向绑定矩阵，将本地坐标转换到世界坐标
     void updateTRSMatrix();
     glm::mat4 getTRSMatrix();
 

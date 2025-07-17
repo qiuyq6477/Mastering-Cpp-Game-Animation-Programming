@@ -411,7 +411,9 @@ bool OGLRenderer::draw(float deltaTime) {
         mModelBoneMatrices.clear();
 
         for (unsigned int i = 0; i < numberOfInstances; ++i) {
+          // 复用node，如果需要多线程的话，需要拷贝，否则会发生数据竞争
           modelType.second.at(i)->updateAnimation(deltaTime);
+          // 获取这个模型所有骨骼的全局变换矩阵
           std::vector<glm::mat4> instanceBoneMatrices = modelType.second.at(i)->getBoneMatrices();
           mModelBoneMatrices.insert(mModelBoneMatrices.end(),
             instanceBoneMatrices.begin(), instanceBoneMatrices.end());
